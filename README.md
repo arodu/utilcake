@@ -1,4 +1,4 @@
-# UtilCake plugin for CakePHP
+# UtilCake plugin for CakePHP 4.x
 
 CakePHP Plugin, collection of utilities for CakePHP 4.x
 
@@ -57,7 +57,7 @@ public function action(){
 }
 ```
 
-In the template `templates/ControllerName/action.ctp`
+In the template `templates/ControllerName/action.php`
 ```php
 echo $this->Form->create(null, ['id'=>'form-id']);
   // ...
