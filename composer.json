@@ -1,6 +1,6 @@
 {
-    "name": "your-name-here/UtilCake",
-    "description": "UtilCake plugin for CakePHP",
+    "name": "arodu/utilcake",
+    "description": "UtilCake plugin for CakePHP 4.x",
     "type": "cakephp-plugin",
     "license": "MIT",
     "require": {
