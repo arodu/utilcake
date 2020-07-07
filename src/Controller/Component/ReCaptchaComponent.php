@@ -24,6 +24,7 @@ class ReCaptchaComponent extends Component
       'input_name' => 'g-recaptcha-response',
       'recaptcha_min_score' => 0.5,
       'recaptcha_url' => 'https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s',
+      'active' => false,
     ];
 
     public function initialize(array $config): void{
@@ -33,12 +34,17 @@ class ReCaptchaComponent extends Component
         $controller->viewBuilder()->setHelpers(['UtilCake.ReCaptcha' => [
           'public_key' => $this->getConfig('public_key'),
           'input_name' => $this->getConfig('input_name'),
+          'active' => $this->getConfig('active'),
         ]]);
 
     }
 
 
       public function verify($data){
+        if($this->getConfig('active') === false){
+          return true;
+        }
+
         if (isset($data[$this->getConfig('input_name')])) {
 
             // Build POST request:
@@ -59,7 +65,6 @@ class ReCaptchaComponent extends Component
 
       public function verifyOrFail($data){
         
-
       }
     
       public function getPublicKey(){

@@ -20,6 +20,7 @@ class ReCaptchaHelper extends Helper
       'url' => 'https://www.google.com/recaptcha/api.js?render=%s',
       'input_name' => null,
       'public_key' => null,
+      'active' => true,
     ];
 
     public $helpers = ['Html', 'Form'];
@@ -37,8 +38,8 @@ class ReCaptchaHelper extends Helper
     }
 
     public function script($form_target, $action = 'app'){
-      $script_code = '
-document.querySelector("'.$form_target.'").addEventListener("submit", function(e){
+      if($this->getConfig('active')){
+        $script_code = 'document.querySelector("'.$form_target.'").addEventListener("submit", function(e){
     e.preventDefault();
       grecaptcha.ready(async function() {
         let token = await grecaptcha.execute("'.$this->getConfig('public_key').'", {action: "'.$action.'"})
@@ -53,12 +54,13 @@ document.querySelector("'.$form_target.'").addEventListener("submit", function(e
         
         form.submit();
       });
-  });
-';
+  });';
 
-      $this->Html->script($this->_googleUrl(), ['block' => true]);
-      $this->Html->scriptBlock($script_code, ['block'=>true]);
+        $this->Html->script($this->_googleUrl(), ['block' => true]);
+        $this->Html->scriptBlock($script_code, ['block'=>true]);
 
+      }
+      
       return null;
     }
 
