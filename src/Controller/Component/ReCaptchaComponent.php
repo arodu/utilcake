@@ -24,7 +24,7 @@ class ReCaptchaComponent extends Component
       'input_name' => 'g-recaptcha-response',
       'recaptcha_min_score' => 0.5,
       'recaptcha_url' => 'https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s',
-      'active' => false,
+      'active' => true,
     ];
 
     public function initialize(array $config): void{
