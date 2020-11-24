@@ -15,11 +15,13 @@ composer require arodu/utilcake
 ## Configuration
 
 You can load the plugin using the shell command:
+
 ```sh
 bin/cake plugin load UtilCake
 ```
 
 Or you can manually add the loading statement in the **src/Application.php** file of your application:
+
 ```php
 public function bootstrap(){
     parent::bootstrap();
@@ -32,6 +34,7 @@ public function bootstrap(){
 ### Google reCaptcha V3
 
 In the controller file
+
 ```php
 public function initialize(): void{
   parent::initialize();
@@ -58,6 +61,7 @@ public function action(){
 ```
 
 In the template `templates/ControllerName/action.php`
+
 ```php
 echo $this->Form->create(null, ['id'=>'form-id']);
   // ...
@@ -66,5 +70,32 @@ echo $this->Form->end();
 $this->ReCaptcha->script('#form-id');
 ```
 
+### Google login
 
+In the controller file
 
+```php
+//  /Controller/UsersController.php
+public function initialize(): void{
+  parent::initialize();
+  $this->loadComponent('UtilCake.GoogleLogin', [
+    'client_id' => GOOGLE_CLIENT_ID,
+    'client_secret' => GOOGLE_CLIENT_SECRET,
+    'redirect_uri' => Router::url([
+        'controller' => 'Users',
+        'action' => 'googleLogin',
+        'prefix' => false,
+        '_full' => true
+      ]),
+  ]);
+}
+```
+
+In the login template
+
+```php
+//  /templates/Users/login.php
+  echo $this->GoogleLogin->link(__('Sign in with Google'),
+    ['class' => 'btn btn-block btn-danger', 'escape' => false]
+  );
+```
