@@ -72,10 +72,19 @@ $this->ReCaptcha->script('#form-id');
 
 ### Google login
 
-In the controller file
+with AuthenticationComponent
+
+In the login template, ex:`/templates/Users/login.php`
 
 ```php
-//  /Controller/UsersController.php
+echo $this->GoogleLogin->link(__('Sign in with Google'),
+  ['class' => 'btn btn-block btn-danger', 'escape' => false]
+);
+```
+
+In the controller file, ex:`/Controller/UsersController.php`
+
+```php
 public function initialize(): void{
   parent::initialize();
   $this->loadComponent('UtilCake.GoogleLogin', [
@@ -89,13 +98,32 @@ public function initialize(): void{
       ]),
   ]);
 }
-```
 
-In the login template
+//...
 
-```php
-//  /templates/Users/login.php
-  echo $this->GoogleLogin->link(__('Sign in with Google'),
-    ['class' => 'btn btn-block btn-danger', 'escape' => false]
-  );
+public function googleLogin() {
+  if (!empty($this->request->getQuery('code'))) {
+    try {
+      $data = $this->GoogleLogin->getAccessToken($this->request->getQuery('code'));
+      $user_profile_info = $this->GoogleLogin->getUserProfileInfo($data['access_token']);
+
+      $user = $this->Users->find()
+        ->where(['Users.email' => $user_profile_info['email']])
+        ->first();
+
+      if ($user) {
+        $this->Authentication->setIdentity($user);
+        $target = $this->Authentication->getLoginRedirect() ?? '/';
+        return $this->redirect($target);
+      }
+
+      $this->Flash->error('Invalid google login');
+    } catch (\Exception $e) {
+      throw new NotFoundException($e->getMessage());
+    }
+  }
+
+  return $this->redirect(['action' => 'login']);
+}
+
 ```
